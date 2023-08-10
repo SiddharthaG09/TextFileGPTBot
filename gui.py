@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import filedialog
 import openai
 openai.api_key="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"
+from llama_index import SimpleDirectoryReader, VectorStoreIndex
 
 def browse_file():
     file_path = filedialog.askopenfilename(filetypes=[("Text files", "*.txt")])
@@ -65,6 +66,13 @@ answer_text.pack()
 
 # Start the GUI event loop
 root.mainloop()
+
+documents = SimpleDirectoryReader('file_path_var').load_data()
+index = VectorStoreIndex.from_documents(documents)
+
+query_engine = index.as_query_engine()
+response = query_engine.query(question_var)
+print(response)
 
 # Retrieve the stored variables after the GUI is closed
 file_path = file_path_var.get()
