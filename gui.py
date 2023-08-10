@@ -1,5 +1,7 @@
 import tkinter as tk
 from tkinter import filedialog
+import openai
+openai.api_key="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"
 
 def browse_file():
     file_path = filedialog.askopenfilename(filetypes=[("Text files", "*.txt")])
