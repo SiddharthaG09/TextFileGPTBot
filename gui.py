@@ -2,7 +2,6 @@ import tkinter as tk
 from tkinter import filedialog
 from llama_index import VectorStoreIndex, SimpleDirectoryReader
 
-# Declare the index variable globally
 index = None
 
 def browse_file():
