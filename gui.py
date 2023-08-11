@@ -1,8 +1,5 @@
 import tkinter as tk
 from tkinter import filedialog
-import openai
-openai.api_key="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"
-from llama_index import SimpleDirectoryReader, VectorStoreIndex
 
 def browse_file():
     file_path = filedialog.askopenfilename(filetypes=[("Text files", "*.txt")])
@@ -10,14 +7,22 @@ def browse_file():
     file_path_label.config(text=file_path)
 
 def submit_question():
-    question = question_text.get("1.0", "end-1c")
-    question_var.set(question)
-    answer_text.delete("1.0", tk.END)  # Clear previous answer
-    # Here, you can add code to generate the answer based on the question and file_path
-    answer = "This is a sample answer."
-    answer_text.insert(tk.END, answer)
+    try:
+        question = question_text.get("1.0", "end-1c")
+        question_var.set(question)
+        answer_text.delete("1.0", tk.END)  # Clear previous answer
 
-# Create the main GUI window
+        # Retrieve the stored document using the file_path_var
+        file_path = file_path_var.get()
+        if file_path:
+            with open(file_path, "r", encoding="latin-1") as file:
+                content = file.read()
+                answer_text.insert(tk.END, content)
+        else:
+            answer_text.insert(tk.END, "Please select a file.")
+    except Exception as e:
+        answer_text.insert(tk.END, "An error occurred: " + str(e))
+
 root = tk.Tk()
 root.title("File Uploader and Question")
 
@@ -62,21 +67,5 @@ answer_label.pack()
 answer_text = tk.Text(answer_frame, height=4, width=50)
 answer_text.pack()
 
-
-
 # Start the GUI event loop
 root.mainloop()
-
-documents = SimpleDirectoryReader('file_path_var').load_data()
-index = VectorStoreIndex.from_documents(documents)
-
-query_engine = index.as_query_engine()
-response = query_engine.query(question_var)
-print(response)
-
-# Retrieve the stored variables after the GUI is closed
-file_path = file_path_var.get()
-question = question_var.get()
-
-print("File Path:", file_path)
-print("Question:", question)
